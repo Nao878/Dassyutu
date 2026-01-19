@@ -51,10 +51,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Start()は空にする - UIGeneratorがUIを生成して管理する
     void Start()
     {
-        // 最初はプレイヤー人数選択画面を表示
-        ShowPlayerCountPanel();
+        // UIGeneratorが動的にUIを生成・管理するため、ここでは何もしない
     }
 
     // すべてのパネルを非表示にするヘルパーメソッド
@@ -73,7 +73,10 @@ public class UIManager : MonoBehaviour
     {
         HideAllPanels();
         if (playerCountPanel != null) playerCountPanel.SetActive(true);
-        GameManager.Instance.currentState = GameState.PlayerCountSelect;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.PlayerCountSelect;
+        }
     }
 
     // 伏せ画面を表示（プレイヤー交代時）
@@ -82,7 +85,10 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         if (coverPanel != null) coverPanel.SetActive(true);
         if (coverMessageText != null) coverMessageText.text = message;
-        GameManager.Instance.currentState = GameState.CoverScreen;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.CoverScreen;
+        }
     }
 
     // お題表示画面を表示（ヒント提供者向け）
@@ -92,13 +98,13 @@ public class UIManager : MonoBehaviour
         if (topicPanel != null) topicPanel.SetActive(true);
         
         // お題を表示
-        if (topicText != null)
+        if (topicText != null && GameManager.Instance != null)
         {
             topicText.text = $"お題: {GameManager.Instance.topic}";
         }
 
         // お題を確認するヒント提供者の名前を表示
-        if (topicViewersText != null)
+        if (topicViewersText != null && GameManager.Instance != null)
         {
             string viewers = "";
             for (int i = 0; i < GameManager.Instance.playerCount; i++)
@@ -112,7 +118,10 @@ public class UIManager : MonoBehaviour
         // ラウンド表示
         UpdateRoundDisplay();
         
-        GameManager.Instance.currentState = GameState.TopicDisplay;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.TopicDisplay;
+        }
     }
 
     // ヒント入力画面を表示
@@ -122,7 +131,7 @@ public class UIManager : MonoBehaviour
         if (hintInputPanel != null) hintInputPanel.SetActive(true);
         
         // 現在のヒント提供者の名前を表示
-        if (hintInputPlayerText != null)
+        if (hintInputPlayerText != null && GameManager.Instance != null)
         {
             string playerName = GameManager.Instance.GetCurrentHintGiverName();
             hintInputPlayerText.text = $"{playerName}の番です\nお題に関する数値を入力してください";
@@ -131,7 +140,10 @@ public class UIManager : MonoBehaviour
         // ラウンド表示
         UpdateRoundDisplay();
         
-        GameManager.Instance.currentState = GameState.HintInput;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.HintInput;
+        }
     }
 
     // 回答入力画面を表示（回答者向け）
@@ -141,7 +153,7 @@ public class UIManager : MonoBehaviour
         if (answerPanel != null) answerPanel.SetActive(true);
         
         // ヒント一覧を表示
-        if (hintsDisplayText != null)
+        if (hintsDisplayText != null && GameManager.Instance != null)
         {
             hintsDisplayText.text = $"ヒント一覧:\n{GameManager.Instance.GetHintsDisplayText()}";
         }
@@ -149,7 +161,10 @@ public class UIManager : MonoBehaviour
         // ラウンド表示
         UpdateRoundDisplay();
         
-        GameManager.Instance.currentState = GameState.AnswerInput;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.AnswerInput;
+        }
     }
 
     // 結果表示画面を表示
@@ -158,7 +173,7 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
         if (resultPanel != null) resultPanel.SetActive(true);
         
-        if (resultText != null)
+        if (resultText != null && GameManager.Instance != null)
         {
             if (isCorrect)
             {
@@ -173,13 +188,16 @@ public class UIManager : MonoBehaviour
         // ラウンド表示
         UpdateRoundDisplay();
         
-        GameManager.Instance.currentState = GameState.Result;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.currentState = GameState.Result;
+        }
     }
 
     // ラウンド表示を更新
     private void UpdateRoundDisplay()
     {
-        if (roundText != null)
+        if (roundText != null && GameManager.Instance != null)
         {
             roundText.text = $"ラウンド {GameManager.Instance.currentRound}";
         }
@@ -188,8 +206,11 @@ public class UIManager : MonoBehaviour
     // 回答者に画面を見せないための伏せ画面を表示
     public void ShowAnswererCoverScreen()
     {
-        string message = $"⚠️ {GameManager.Instance.GetAnswererName()}さんは\n画面を見ないでください！\n\n他のプレイヤーがお題を確認します\n\n準備ができたら「OK」を押してください";
-        ShowCoverScreen(message);
+        if (GameManager.Instance != null)
+        {
+            string message = $"⚠️ {GameManager.Instance.GetAnswererName()}さんは\n画面を見ないでください！\n\n他のプレイヤーがお題を確認します\n\n準備ができたら「OK」を押してください";
+            ShowCoverScreen(message);
+        }
     }
 
     // プレイヤー交代用の伏せ画面を表示
@@ -202,7 +223,10 @@ public class UIManager : MonoBehaviour
     // 回答者の番を知らせる伏せ画面を表示
     public void ShowAnswererTurnCoverScreen()
     {
-        string message = $"🎯 {GameManager.Instance.GetAnswererName()}さんの番です！\n\nヒントを見てお題を当ててください\n\n準備ができたら「OK」を押してください";
-        ShowCoverScreen(message);
+        if (GameManager.Instance != null)
+        {
+            string message = $"🎯 {GameManager.Instance.GetAnswererName()}さんの番です！\n\nヒントを見てお題を当ててください\n\n準備ができたら「OK」を押してください";
+            ShowCoverScreen(message);
+        }
     }
 }
