@@ -36,10 +36,11 @@ public class PlayerInputManager : MonoBehaviour
             // 全員入力済みなら結果画面へ
             if (gameManager.IsAllPlayerInput())
             {
-                string result = "全員の入力値: ";
-                foreach (var v in gameManager.playerValues)
+                string result = "全員の入力値:\n";
+                for (int i = 0; i < gameManager.playerValues.Count; i++)
                 {
-                    result += v.ToString() + " ";
+                    string playerName = gameManager.GetPlayerName(i);
+                    result += $"{playerName}: {gameManager.playerValues[i]}\n";
                 }
                 uiManager.ShowResultPanel(result + "\nお題を推理してください！");
             }
@@ -53,6 +54,7 @@ public class PlayerInputManager : MonoBehaviour
     // 現在のプレイヤー番号を表示
     private void ShowCurrentPlayer()
     {
-        playerNumberText.text = $"プレイヤー{currentPlayer}の入力";
+        string playerName = gameManager.GetPlayerName(currentPlayer - 1);
+        playerNumberText.text = $"{playerName}の入力";
     }
 }

@@ -18,6 +18,12 @@ public class UIManager : MonoBehaviour
     // 結果表示用テキスト（TextMeshPro版）
     public TMP_Text resultText;
 
+    void Start()
+    {
+        // 最初はプレイヤー人数選択画面を表示
+        ShowPlayerCountPanel();
+    }
+
     // プレイヤー人数選択画面を表示
     public void ShowPlayerCountPanel()
     {
