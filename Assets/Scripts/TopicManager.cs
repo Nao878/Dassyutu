@@ -1,52 +1,86 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// ����̊Ǘ��ƃ����_���I�����s���N���X
+// お題の管理とランダム選択を行うクラス
 public class TopicManager : MonoBehaviour
 {
-    // �V���O���g���C���X�^���X
+    // シングルトンインスタンス
     public static TopicManager Instance;
-    // ���胊�X�g
+    
+    // お題リスト（様々なジャンルを含む）
     private List<string> topics = new List<string> {
-        "���ǂ�LINE�̌���",
-        "�����̕���",
-        "�D���Ȑ���",
-        "�����Ă��錮�̐�",
-        "���̋C���̓_��(1-10)",
-        "�����͉��x�Q���܂������H",
-        "����̕��ϐH����",
-        "�����̊O�H��",
-        "���N�̗��s�Ɍ�������",
-        "�l���ŊC�O���s�Ɍ�������",
-        "�_�񂵂Ă���T�u�X�N�̐�",
-        "�[���̍D�����̓x��(0-100)",
-        "�l���Ńm�b�N�A�E�g������",
-        "�l���Ńo���W�[�W�����v������",
-        "�l���ŃX�J�C�_�C�r���O������",
-        "�l���ň����z��������",
-        "�l���Ńe�����X�g���U�߂Ă������̖ϑz��������",
-        "�l���Ń^���X�̊p�ɏ��w���Ԃ�����",
-        "���N�A����҂ɍs������",
-        "�l���ň�ԍ����������̒l�i",
-        "�����s���H���ŗ��ޗ����̒l�i�̕���",
-        "�����ɂƂ��ĉ��N�̗ǂ�����",
-        "�Œ��ő�������́A�p���N��",
-        "�l���ň�ԍK���������Ƃ��̐���",
-        "�c���ɑ΂���D���x(0-100)",
-        "���h����l��SNS�̃t�H�����[��",
-        "�����̖��O�̉搔",
-        "�l�I�ɍD���Ȏ���̐���"
+        // 日常生活系
+        "未読のLINEの件数",
+        "今日の歩数",
+        "好きな数字",
+        "持っている鍵の数",
+        "今の気分の点数(1-10)",
+        "今日は何度寝しましたか？",
+        "一日の平均食事回数",
+        "今月の外食回数",
+        "昨日の睡眠時間（時間）",
+        "持っている靴の数",
+        "スマホの通知数",
+        "スマホの充電残量(%)",
+        "今財布に入っている小銭の枚数",
+        
+        // 趣味・嗜好系
+        "契約しているサブスクの数",
+        "納豆の好きさの度合(0-100)",
+        "最長で続いた趣味の継続年数",
+        "自分にとって縁起の良い数字",
+        "個人的に好きな時代の西暦",
+        "好きなアーティストの曲数",
+        "今年読んだ本の数",
+        "今年見た映画の数",
+        
+        // 人生経験系
+        "今年の旅行に行った回数",
+        "人生で海外旅行に行った回数",
+        "人生でノックアウトした回数",
+        "人生でバンジージャンプした回数",
+        "人生でスカイダイビングした回数",
+        "人生で引っ越しした回数",
+        "人生でタンスの角に小指をぶつけた回数",
+        "今年、歯医者に行った回数",
+        "人生で転職した回数",
+        
+        // お金系
+        "人生で一番高い買い物の値段(万円)",
+        "いつも行く食堂で頼む料理の値段の平均",
+        "今月使ったコンビニの回数",
+        
+        // ネット・SNS系
+        "尊敬する人のSNSのフォロワー数",
+        "自分の名前の画数",
+        "登録しているYouTubeチャンネルの数",
+        "フォローしているアカウントの数",
+        
+        // その他ユニーク系
+        "人生でテロリストが攻めてきた時の妄想をした回数",
+        "人生で一番幸せだったときの西暦",
+        "祖国に対する好感度(0-100)",
+        "自分の体重(kg)",
+        "自分の身長(cm)"
     };
-    // �I�����ꂽ����
+    
+    // 選択されたお題
     private string selectedTopic = "";
 
-    // �C���X�^���X���Z�b�g�i�V���O���g�����j
+    // インスタンスをセット（シングルトン化）
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // �����_���ł�����擾
+    // ランダムでお題を取得
     public string GetRandomTopic()
     {
         int idx = Random.Range(0, topics.Count);
@@ -54,19 +88,19 @@ public class TopicManager : MonoBehaviour
         return selectedTopic;
     }
 
-    // �I�����ꂽ������擾
+    // 選択されたお題を取得
     public string GetSelectedTopic()
     {
         return selectedTopic;
     }
 
-    // ������蓮�ŃZ�b�g
+    // お題を手動でセット
     public void SetSelectedTopic(string topic)
     {
         selectedTopic = topic;
     }
 
-    // ���胊�X�g���擾
+    // お題リストを取得
     public List<string> GetTopics()
     {
         return topics;

@@ -1,81 +1,76 @@
 using UnityEngine;
 using TMPro;
 
-// ƒvƒŒƒCƒ„[l”‘I‘ğ‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°é¸æŠã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 public class PlayerCountSelector : MonoBehaviour
 {
-    // ƒvƒŒƒCƒ„[l”“ü—ÍƒtƒB[ƒ‹ƒhiTextMeshPro”Åj
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°å…¥åŠ›ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
     public TMP_InputField playerCountInput;
-    // ƒvƒŒƒCƒ„[l”•\¦—pƒeƒLƒXƒgiTextMeshPro”Åj
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°è¡¨ç¤ºç”¨ãƒ†ã‚­ã‚¹ãƒˆ
     public TMP_Text playerCountDisplayText;
     
-    // ƒQ[ƒ€isŠÇ——p
-    public GameManager gameManager;
-    // UI‰æ–ÊŠÇ——p
-    public UIManager uiManager;
+    // ã‚²ãƒ¼ãƒ ãƒ•ãƒ­ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã¸ã®å‚ç…§
+    public GameFlowController gameFlowController;
 
     void Start()
     {
-        // ‰Šú•\¦
+        // åˆæœŸè¡¨ç¤º
         UpdatePlayerCountDisplay();
     }
 
-    // ƒvƒŒƒCƒ„[l”‚ğ‘‚â‚·
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°ã‚’å¢—ã‚„ã™
     public void OnIncreasePlayerCount()
     {
-        int currentCount = gameManager.playerCount;
+        int currentCount = GameManager.Instance.playerCount;
         if (currentCount < 5)
         {
-            gameManager.SetPlayerCount(currentCount + 1);
+            GameManager.Instance.SetPlayerCount(currentCount + 1);
             UpdatePlayerCountDisplay();
         }
     }
 
-    // ƒvƒŒƒCƒ„[l”‚ğŒ¸‚ç‚·
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°ã‚’æ¸›ã‚‰ã™
     public void OnDecreasePlayerCount()
     {
-        int currentCount = gameManager.playerCount;
+        int currentCount = GameManager.Instance.playerCount;
         if (currentCount > 2)
         {
-            gameManager.SetPlayerCount(currentCount - 1);
+            GameManager.Instance.SetPlayerCount(currentCount - 1);
             UpdatePlayerCountDisplay();
         }
     }
 
-    // “ü—ÍƒtƒB[ƒ‹ƒh‚©‚çƒvƒŒƒCƒ„[l”‚ğİ’è
+    // å…¥åŠ›ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°ã‚’è¨­å®š
     public void OnPlayerCountInputChanged()
     {
         int count;
         if (int.TryParse(playerCountInput.text, out count))
         {
-            gameManager.SetPlayerCount(count);
+            GameManager.Instance.SetPlayerCount(count);
             UpdatePlayerCountDisplay();
         }
     }
 
-    // ƒvƒŒƒCƒ„[l”Œˆ’èƒ{ƒ^ƒ“
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°æ±ºå®šãƒœã‚¿ãƒ³
     public void OnConfirmPlayerCount()
     {
-        // ƒvƒŒƒCƒ„[–¼‚ğ‰Šú‰»iƒvƒŒƒCƒ„[1AƒvƒŒƒCƒ„[2...j
-        gameManager.InitializePlayerNames();
-        
-        // ‚¨‘è‚ğŒˆ’è
-        gameManager.DecideTopic();
-        
-        // ‚¨‘è•\¦‰æ–Ê‚Ö
-        uiManager.ShowTopicPanel(gameManager.topic);
+        // ã‚²ãƒ¼ãƒ ãƒ•ãƒ­ãƒ¼ã‚’é–‹å§‹
+        if (gameFlowController != null)
+        {
+            gameFlowController.StartGame();
+        }
     }
 
-    // ƒvƒŒƒCƒ„[l”‚Ì•\¦‚ğXV
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°ã®è¡¨ç¤ºã‚’æ›´æ–°
     private void UpdatePlayerCountDisplay()
     {
         if (playerCountDisplayText != null)
         {
-            playerCountDisplayText.text = $"ƒvƒŒƒCƒ„[l”: {gameManager.playerCount}";
+            playerCountDisplayText.text = $"ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼äººæ•°: {GameManager.Instance.playerCount}";
         }
         if (playerCountInput != null)
         {
-            playerCountInput.text = gameManager.playerCount.ToString();
+            playerCountInput.text = GameManager.Instance.playerCount.ToString();
         }
     }
 }

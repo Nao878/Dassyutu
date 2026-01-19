@@ -1,60 +1,75 @@
 using UnityEngine;
 using TMPro;
 
-// ƒvƒŒƒCƒ„[‚Ì’l“ü—Í‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+// ãƒ’ãƒ³ãƒˆæä¾›è€…ã®å…¥åŠ›ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 public class PlayerInputManager : MonoBehaviour
 {
-    // “ü—ÍƒtƒB[ƒ‹ƒhiTextMeshPro”Åj
-    public TMP_InputField valueInput;
-    // Œ»İ‚ÌƒvƒŒƒCƒ„[”Ô†•\¦—pƒeƒLƒXƒgiTextMeshPro”Åj
+    // ãƒ’ãƒ³ãƒˆå…¥åŠ›ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+    public TMP_InputField hintInputField;
+    // ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç•ªå·è¡¨ç¤ºç”¨ãƒ†ã‚­ã‚¹ãƒˆ
     public TMP_Text playerNumberText;
-    // Œ»İ“ü—Í’†‚ÌƒvƒŒƒCƒ„[”Ô†
-    private int currentPlayer = 1;
 
-    // ƒQ[ƒ€isŠÇ——p
-    public GameManager gameManager;
-    // UI‰æ–ÊŠÇ——p
-    public UIManager uiManager;
-
-    // “ü—ÍŠJn‚Ì‰Šú‰»
-    public void StartInput()
+    // å…¥åŠ›é–‹å§‹æ™‚ã®åˆæœŸåŒ–
+    public void StartHintInput()
     {
-        currentPlayer = 1;
-        ShowCurrentPlayer();
+        // å…¥åŠ›ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã‚¯ãƒªã‚¢
+        if (hintInputField != null)
+        {
+            hintInputField.text = "";
+        }
+        
+        // ç¾åœ¨ã®ãƒ’ãƒ³ãƒˆæä¾›è€…ã®åå‰ã‚’è¡¨ç¤º
+        ShowCurrentHintGiver();
     }
 
-    // “ü—Í’l‚Ì‘—Mˆ—
-    public void OnSubmitValue()
+    // ãƒ’ãƒ³ãƒˆå€¤ã®é€ä¿¡å‡¦ç†ï¼ˆé€ä¿¡ãƒœã‚¿ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã™ï¼‰
+    public void OnSubmitHint()
     {
-        int value;
-        // “ü—Í’l‚ª®”‚©”»’è
-        if (int.TryParse(valueInput.text, out value))
+        if (hintInputField == null) return;
+        
+        string inputValue = hintInputField.text.Trim();
+        
+        // å…¥åŠ›å€¤ãŒç©ºã§ãªã„ã‹ç¢ºèª
+        if (string.IsNullOrEmpty(inputValue))
         {
-            gameManager.AddPlayerValue(value); // “ü—Í’l‚ğ’Ç‰Á
-            currentPlayer++;
-            valueInput.text = ""; // “ü—Í—“‚ğƒNƒŠƒA
-            // ‘Sˆõ“ü—ÍÏ‚İ‚È‚çŒ‹‰Ê‰æ–Ê‚Ö
-            if (gameManager.IsAllPlayerInput())
-            {
-                string result = "‘Sˆõ‚Ì“ü—Í’l:\n";
-                for (int i = 0; i < gameManager.playerValues.Count; i++)
-                {
-                    string playerName = gameManager.GetPlayerName(i);
-                    result += $"{playerName}: {gameManager.playerValues[i]}\n";
-                }
-                uiManager.ShowResultPanel(result + "\n‚¨‘è‚ğ„—‚µ‚Ä‚­‚¾‚³‚¢I");
-            }
-            else
-            {
-                ShowCurrentPlayer(); // Ÿ‚ÌƒvƒŒƒCƒ„[‚Ö
-            }
+            Debug.LogWarning("å…¥åŠ›å€¤ãŒç©ºã§ã™");
+            return;
+        }
+
+        // ãƒ’ãƒ³ãƒˆå€¤ã‚’è¿½åŠ 
+        GameManager.Instance.AddHintValue(inputValue);
+        
+        // å…¥åŠ›æ¬„ã‚’ã‚¯ãƒªã‚¢
+        hintInputField.text = "";
+
+        // å…¨å“¡å…¥åŠ›æ¸ˆã¿ãªã‚‰å›ç­”è€…ã®ç•ªã¸
+        if (GameManager.Instance.IsAllHintsGiven())
+        {
+            // å›ç­”è€…ã¸ã®äº¤ä»£ç”»é¢ã‚’è¡¨ç¤º
+            UIManager.Instance.ShowAnswererTurnCoverScreen();
+        }
+        else
+        {
+            // æ¬¡ã®ãƒ’ãƒ³ãƒˆæä¾›è€…ã¸ã®äº¤ä»£ç”»é¢ã‚’è¡¨ç¤º
+            string nextPlayerName = GameManager.Instance.GetCurrentHintGiverName();
+            UIManager.Instance.ShowPlayerChangeCoverScreen(nextPlayerName);
         }
     }
 
-    // Œ»İ‚ÌƒvƒŒƒCƒ„[”Ô†‚ğ•\¦
-    private void ShowCurrentPlayer()
+    // ç¾åœ¨ã®ãƒ’ãƒ³ãƒˆæä¾›è€…ã‚’è¡¨ç¤º
+    private void ShowCurrentHintGiver()
     {
-        string playerName = gameManager.GetPlayerName(currentPlayer - 1);
-        playerNumberText.text = $"{playerName}‚Ì“ü—Í";
+        if (playerNumberText != null)
+        {
+            string playerName = GameManager.Instance.GetCurrentHintGiverName();
+            playerNumberText.text = $"{playerName}ã®å…¥åŠ›";
+        }
+    }
+
+    // ä¼ã›ç”»é¢ã‹ã‚‰ãƒ’ãƒ³ãƒˆå…¥åŠ›ç”»é¢ã¸ã®é·ç§»ï¼ˆOKãƒœã‚¿ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã™ï¼‰
+    public void OnCoverScreenOKForHintInput()
+    {
+        StartHintInput();
+        UIManager.Instance.ShowHintInputPanel();
     }
 }
